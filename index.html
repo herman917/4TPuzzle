@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -366,9 +367,11 @@
       .app-shell {
         padding: 10px 12px 12px;
       }
+
       .title-group h1 {
         font-size: 1.05rem;
       }
+
       button {
         padding: 6px 9px;
         font-size: 0.8rem;
@@ -376,6 +379,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app-shell">
     <header class="top-bar">
@@ -437,17 +441,10 @@
 
   <div id="hintPasswordModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="hintPwdTitle">
     <div class="modal-card">
-      <h2 id="hintPwdTitle">輸入提示密碼</h2>
-      <p>提示：4 位數字（Herman 的生日）</p>
-      <input
-        id="hintPasswordInput"
-        class="pwd-input"
-        type="password"
-        inputmode="numeric"
-        maxlength="4"
-        placeholder="••••"
-        autocomplete="off"
-      />
+      <h2 id="hintPwdTitle">輸入密碼</h2>
+      <p>提示：4 位數字</p>
+      <input id="hintPasswordInput" class="pwd-input" type="password" inputmode="numeric" maxlength="4"
+        placeholder="••••" autocomplete="off" />
       <div id="hintPasswordError" class="pwd-error" aria-live="polite"></div>
       <div class="modal-actions">
         <button id="hintCancelBtn" type="button">取消</button>
@@ -1335,4 +1332,5 @@
     })();
   </script>
 </body>
+
 </html>
