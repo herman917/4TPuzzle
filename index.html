@@ -329,6 +329,39 @@
       margin-top: 2px;
     }
 
+    .pwd-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--text-main);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .pwd-input:focus {
+      border-color: var(--accent);
+    }
+
+    .pwd-error {
+      min-height: 1.2em;
+      font-size: 0.82rem;
+      color: #c2410c;
+      margin-bottom: 12px;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
     @media (max-width: 600px) {
       .app-shell {
         padding: 10px 12px 12px;
@@ -399,6 +432,27 @@
         </div>
       </div>
       <button id="playAgainBtn" type="button" class="primary" style="width: 100%; padding: 10px;">再玩一次</button>
+    </div>
+  </div>
+
+  <div id="hintPasswordModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="hintPwdTitle">
+    <div class="modal-card">
+      <h2 id="hintPwdTitle">輸入提示密碼</h2>
+      <p>提示：4 位數字（Herman 的生日）</p>
+      <input
+        id="hintPasswordInput"
+        class="pwd-input"
+        type="password"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="••••"
+        autocomplete="off"
+      />
+      <div id="hintPasswordError" class="pwd-error" aria-live="polite"></div>
+      <div class="modal-actions">
+        <button id="hintCancelBtn" type="button">取消</button>
+        <button id="hintConfirmBtn" type="button" class="primary">確認</button>
+      </div>
     </div>
   </div>
 
@@ -636,6 +690,7 @@
       let activePointerId = null;
 
       let showHint = false;
+      let hintUnlocked = false;
       let isMinimalTheme = false;
       let steps = 0;
       let startTime = null;
@@ -907,10 +962,62 @@
       document.getElementById('rotP15').addEventListener('click', () => rotateSelected(15));
       document.getElementById('rotP45').addEventListener('click', () => rotateSelected(45));
 
-      hintBtn.addEventListener('click', () => {
-        showHint = !showHint;
+      const hintPasswordModal = document.getElementById('hintPasswordModal');
+      const hintPasswordInput = document.getElementById('hintPasswordInput');
+      const hintPasswordError = document.getElementById('hintPasswordError');
+      const hintCancelBtn = document.getElementById('hintCancelBtn');
+      const hintConfirmBtn = document.getElementById('hintConfirmBtn');
+
+      function setHintVisible(visible) {
+        showHint = visible;
         hintBtn.classList.toggle('active-toggle', showHint);
         hintBtn.textContent = showHint ? '隱藏提示輪廓' : '顯示提示輪廓';
+      }
+
+      function openHintPasswordModal() {
+        hintPasswordInput.value = '';
+        hintPasswordError.textContent = '';
+        hintPasswordModal.classList.add('show');
+        requestAnimationFrame(() => hintPasswordInput.focus());
+      }
+
+      function closeHintPasswordModal() {
+        hintPasswordModal.classList.remove('show');
+      }
+
+      function submitHintPassword() {
+        if (hintPasswordInput.value.trim() === '0917') {
+          hintUnlocked = true;
+          closeHintPasswordModal();
+          setHintVisible(true);
+          return;
+        }
+        hintPasswordError.textContent = '密碼錯誤，提示：4 位數字（Herman 的生日）';
+        hintPasswordInput.focus();
+        hintPasswordInput.select();
+      }
+
+      hintBtn.addEventListener('click', () => {
+        if (!showHint && !hintUnlocked) {
+          openHintPasswordModal();
+          return;
+        }
+        setHintVisible(!showHint);
+      });
+
+      hintCancelBtn.addEventListener('click', closeHintPasswordModal);
+      hintConfirmBtn.addEventListener('click', submitHintPassword);
+      hintPasswordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          submitHintPassword();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          closeHintPasswordModal();
+        }
+      });
+      hintPasswordModal.addEventListener('click', (e) => {
+        if (e.target === hintPasswordModal) closeHintPasswordModal();
       });
 
       resetBtn.addEventListener('click', initGame);
