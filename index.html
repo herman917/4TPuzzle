@@ -977,12 +977,12 @@
       function openHintPasswordModal() {
         hintPasswordInput.value = '';
         hintPasswordError.textContent = '';
-        hintPasswordModal.classList.add('show');
+        hintPasswordModal.classList.add('open');
         requestAnimationFrame(() => hintPasswordInput.focus());
       }
 
       function closeHintPasswordModal() {
-        hintPasswordModal.classList.remove('show');
+        hintPasswordModal.classList.remove('open');
       }
 
       function submitHintPassword() {
